@@ -13,11 +13,11 @@ namespace FLASK_COFFEE_API.Database
 
         }
         //public DbSet<Food> Foods { get; set; }
-        //public DbSet<User> Users { get; set; }
-        //public DbSet<UserActivation> UserActivations { get; set; }
-        //public DbSet<Basket> Baskets { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserActivation> UserActivations { get; set; }
+        public DbSet<Basket> Baskets { get; set; }
         public DbSet<Role> Roles { get; set; }
-        //public DbSet<BasketProduct> BasketProducts { get; set; }
+        public DbSet<BasketProduct> BasketProducts { get; set; }
         //public DbSet<OrderProduct> OrderProducts { get; set; }
         //public DbSet<Order> Orders { get; set; }
         //public DbSet<Contact> Contacts { get; set; }

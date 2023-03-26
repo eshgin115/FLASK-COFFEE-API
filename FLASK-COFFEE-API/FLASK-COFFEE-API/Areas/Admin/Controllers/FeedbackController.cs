@@ -4,12 +4,14 @@ using FLASK_COFFEE_API.Contracts.File;
 using FLASK_COFFEE_API.Database;
 using FLASK_COFFEE_API.Database.Models;
 using FLASK_COFFEE_API.Services.Concretes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FLASK_COFFEE_API.Areas.Admin.Controllers;
 
 [ApiController]
+[Authorize]
 public class FeedbackController : ControllerBase
 {
     private readonly DataContext _dataContext;

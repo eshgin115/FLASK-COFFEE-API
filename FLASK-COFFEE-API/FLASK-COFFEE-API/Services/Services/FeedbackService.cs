@@ -3,6 +3,7 @@ using FLASK_COFFEE_API.Areas.Admin.Dtos.FeedBack;
 using FLASK_COFFEE_API.Contracts.File;
 using FLASK_COFFEE_API.Database;
 using FLASK_COFFEE_API.Database.Models;
+using FLASK_COFFEE_API.Exceptions;
 using FLASK_COFFEE_API.Services.Concretes;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,18 +13,16 @@ namespace FLASK_COFFEE_API.Services.Services
     {
         private readonly DataContext _dataContext;
         private readonly IFileService _fileService;
-        private readonly IFeedbackService _feedbackService;
         private readonly IMapper _mapper;
         public FeedbackService
             (DataContext dataContext,
             IFileService fileService,
-            IMapper mapper,
-            IFeedbackService feedbackService)
+            IMapper mapper
+    )
         {
             _dataContext = dataContext;
             _fileService = fileService;
             _mapper = mapper;
-            _feedbackService = feedbackService;
         }
         public async Task<FeedBackListItemDto> AddAsync(FeedBackCreateDto model)
         {
@@ -36,7 +35,7 @@ namespace FLASK_COFFEE_API.Services.Services
 
             await _dataContext.SaveChangesAsync();
 
-            return  _mapper.Map<FeedBackListItemDto>(feedBack);
+            return _mapper.Map<FeedBackListItemDto>(feedBack);
         }
         public async Task<FeedBackListItemDto> UpdateAsync(int id, FeedBackUpdateDto dto)
         {
@@ -46,7 +45,7 @@ namespace FLASK_COFFEE_API.Services.Services
                 .FirstOrDefaultAsync(fb => fb.Id == id);
 
 
-            if (feedBack is null) return NotFound();
+            if (feedBack is null) throw new NotFoundException("feedback", id);
 
 
             string feedBackPpImageNameInFileSystem = null!;

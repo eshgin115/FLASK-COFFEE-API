@@ -4,6 +4,7 @@ using FLASK_COFFEE_API.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FLASK_COFFEE_API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230325102340_User_UserActivation")]
+    partial class User_UserActivation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,55 +23,6 @@ namespace FLASK_COFFEE_API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("FLASK_COFFEE_API.Database.Models.Basket", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Baskets", (string)null);
-                });
-
-            modelBuilder.Entity("FLASK_COFFEE_API.Database.Models.BasketProduct", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("BasketId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BasketId");
-
-                    b.ToTable("BasketProducts", (string)null);
-                });
 
             modelBuilder.Entity("FLASK_COFFEE_API.Database.Models.FeedBack", b =>
                 {
@@ -235,29 +188,7 @@ namespace FLASK_COFFEE_API.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UserActivations");
-                });
-
-            modelBuilder.Entity("FLASK_COFFEE_API.Database.Models.Basket", b =>
-                {
-                    b.HasOne("FLASK_COFFEE_API.Database.Models.User", "User")
-                        .WithOne("Basket")
-                        .HasForeignKey("FLASK_COFFEE_API.Database.Models.Basket", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("FLASK_COFFEE_API.Database.Models.BasketProduct", b =>
-                {
-                    b.HasOne("FLASK_COFFEE_API.Database.Models.Basket", "Basket")
-                        .WithMany("BasketProducts")
-                        .HasForeignKey("BasketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Basket");
+                    b.ToTable("UserActivation");
                 });
 
             modelBuilder.Entity("FLASK_COFFEE_API.Database.Models.FeedBack", b =>
@@ -289,11 +220,6 @@ namespace FLASK_COFFEE_API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FLASK_COFFEE_API.Database.Models.Basket", b =>
-                {
-                    b.Navigation("BasketProducts");
-                });
-
             modelBuilder.Entity("FLASK_COFFEE_API.Database.Models.Role", b =>
                 {
                     b.Navigation("FeedBacks");
@@ -303,8 +229,6 @@ namespace FLASK_COFFEE_API.Migrations
 
             modelBuilder.Entity("FLASK_COFFEE_API.Database.Models.User", b =>
                 {
-                    b.Navigation("Basket");
-
                     b.Navigation("UserActivation");
                 });
 #pragma warning restore 612, 618

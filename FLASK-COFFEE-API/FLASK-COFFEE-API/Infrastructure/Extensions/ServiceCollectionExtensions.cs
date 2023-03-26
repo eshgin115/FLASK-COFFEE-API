@@ -1,25 +1,33 @@
-﻿
-
-using AspNetCore.IServiceCollection.AddIUrlHelper;
+﻿using AspNetCore.IServiceCollection.AddIUrlHelper;
 using FLASK_COFFEE_API.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using FLASK_COFFEE_API.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.OpenApi.Models;
+using Microsoft.Net.Http.Headers;
+
 namespace FLASK_COFFEE_API.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-  
+
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(o =>
-            {
-                o.Cookie.Name = "Identity";
-                o.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-                o.LoginPath = "/auth/login";
-                o.AccessDeniedPath = "/admin/auth/login";
-            });
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+               .AddJwtBearer(o =>
+               {
+                   o.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidIssuer = configuration["JwtOptinos:Issuer"],
+                       ValidAudience = configuration["JwtOptinos:Audience"],
+                       IssuerSigningKey = new SymmetricSecurityKey
+                                      (Encoding.UTF8.GetBytes(configuration["JwtOptinos:Key"]))
+                   };
+               });
+
         services.AddAutoMapper(typeof(Program));
         services.AddHttpContextAccessor();
 
@@ -33,7 +41,29 @@ public static class ServiceCollectionExtensions
         services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(o =>
+        {
+            o.AddSecurityDefinition("Auth", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Please Enter Token",
+                Name = HeaderNames.Authorization,
+                Type = SecuritySchemeType.Http,
+                BearerFormat = "JWT",
+                Scheme = "bearer"
+            });
+            o.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                            Name=HeaderNames.Authorization,
+                            Reference=new OpenApiReference{ Type=ReferenceType.SecurityScheme,Id="Auth"}
+                    },
+                    new string[]{ }
+                }
+            });
+        });
 
         services.ConfigureDatabase(configuration);
 

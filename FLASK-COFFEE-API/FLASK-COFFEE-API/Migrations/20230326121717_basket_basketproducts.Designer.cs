@@ -4,6 +4,7 @@ using FLASK_COFFEE_API.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FLASK_COFFEE_API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230326121717_basket_basketproducts")]
+    partial class basket_basketproducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,8 +43,7 @@ namespace FLASK_COFFEE_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Baskets", (string)null);
                 });
@@ -241,8 +242,8 @@ namespace FLASK_COFFEE_API.Migrations
             modelBuilder.Entity("FLASK_COFFEE_API.Database.Models.Basket", b =>
                 {
                     b.HasOne("FLASK_COFFEE_API.Database.Models.User", "User")
-                        .WithOne("Basket")
-                        .HasForeignKey("FLASK_COFFEE_API.Database.Models.Basket", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -303,8 +304,6 @@ namespace FLASK_COFFEE_API.Migrations
 
             modelBuilder.Entity("FLASK_COFFEE_API.Database.Models.User", b =>
                 {
-                    b.Navigation("Basket");
-
                     b.Navigation("UserActivation");
                 });
 #pragma warning restore 612, 618

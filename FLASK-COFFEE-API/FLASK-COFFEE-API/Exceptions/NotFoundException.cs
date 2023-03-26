@@ -3,7 +3,7 @@
 public class NotFoundException : ApplicationException
 {
     public NotFoundException(string name, object key)
-        : base($"{name} with id: ({key}) not found in database")
+            : base($"{name} with id: ({key}) not found in database")
     {
     }
 
